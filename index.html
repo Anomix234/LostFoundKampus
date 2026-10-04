@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Campus Find</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎓
+            <div>
+                <h2>Campus Find</h2>
+                <span>Lost & Found</span>
+            </div>
+        </div>
+
+        <nav>
+            <button data-status="semua" class="active" onclick="filterBarang('semua')">
+                🏠 Dashboard
+            </button>
+
+            <button data-status="hilang" class="" onclick="filterBarang('hilang')">
+                🔴 Barang Hilang
+            </button>
+
+            <button data-status="ditemukan" class="" onclick="filterBarang('ditemukan')">
+                🟢 Barang Ditemukan
+            </button>
+        </nav>
+
+        <button class="dark-btn" onclick="toggleDarkMode()">
+            🌙 Mode Gelap
+        </button>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+                <p>Selamat datang 👋</p>
+                <h1>Campus Find</h1>
+            </div>
+
+            <button class="report-btn" onclick="bukaForm()">
+                ＋ Laporkan Barang
+            </button>
+
+        </header>
+
+
+        <!-- STATISTIK -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div>
+                    <span>Total Laporan</span>
+                    <h2 id="totalBarang">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon red">🔴</div>
+                <div>
+                    <span>Barang Hilang</span>
+                    <h2 id="totalHilang">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">🟢</div>
+                <div>
+                    <span>Ditemukan</span>
+                    <h2 id="totalDitemukan">0</h2>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- SEARCH -->
+        <section class="search-area">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="🔍 Cari nama barang, lokasi, atau deskripsi..."
+                oninput="render()"
+            >
+            <select id="filterKategori" onchange="render()">
+                <option value="semua">Semua Kategori</option>
+                <option>Elektronik</option><option>Dokumen</option><option>Aksesoris</option>
+                <option>Pakaian</option><option>Tas</option><option>Lainnya</option>
+            </select>
+            <select id="urutan" onchange="render()">
+                <option value="baru">Terbaru</option>
+                <option value="lama">Terlama</option>
+            </select>
+
+        </section>
+
+
+        <!-- JUDUL -->
+        <div class="section-title">
+
+            <div>
+                <h2>Laporan Terbaru</h2>
+                <p>Informasi barang hilang dan ditemukan di kampus</p>
+            </div>
+
+        </div>
+
+
+        <!-- DAFTAR BARANG -->
+        <section id="daftarBarang" class="barang-container"></section>
+
+
+    </main>
+
+
+    <!-- MODAL FORM -->
+    <div id="modal" class="modal">
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Laporkan Barang</h2>
+                    <p>Masukkan informasi barang</p>
+                </div>
+
+                <button onclick="tutupForm()" class="close">
+                    ✕
+                </button>
+
+            </div>
+
+
+            <form onsubmit="simpanLaporan(event)">
+
+                <label>Nama Barang</label>
+
+                <input
+                    type="text"
+                    id="namaBarang"
+                    placeholder="Contoh: Dompet hitam"
+                    required
+                >
+
+
+                <label>Kategori</label>
+
+                <select id="kategori">
+
+                    <option>Elektronik</option>
+                    <option>Dokumen</option>
+                    <option>Aksesoris</option>
+                    <option>Pakaian</option>
+                    <option>Tas</option>
+                    <option>Lainnya</option>
+
+                </select>
+
+
+                <label>Lokasi</label>
+
+                <input
+                    type="text"
+                    id="lokasi"
+                    placeholder="Contoh: Perpustakaan"
+                    required
+                >
+
+
+                <label>Deskripsi</label>
+
+                <textarea
+                    id="deskripsi"
+                    placeholder="Jelaskan ciri-ciri barang..."
+                    required
+                ></textarea>
+
+
+                <label>Nama Pelapor</label>
+
+                <input
+                    type="text"
+                    id="pelapor"
+                    placeholder="Nama kamu"
+                    required
+                >
+
+
+                <label>Status</label>
+
+                <div class="status-option">
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="status"
+                            value="hilang"
+                            checked
+                        >
+                        🔴 Barang Hilang
+                    </label>
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="status"
+                            value="ditemukan"
+                        >
+                        🟢 Barang Ditemukan
+                    </label>
+
+                </div>
+
+
+                <label>Foto Barang</label>
+
+                <input
+                    type="file"
+                    id="foto"
+                    accept="image/*"
+                >
+
+
+                <button class="submit-btn">
+                    🚀 Publikasikan Laporan
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div id="detailModal" class="modal" onclick="if(event.target===this)tutupDetail()">
+        <div class="modal-box" id="detailBox"></div>
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
